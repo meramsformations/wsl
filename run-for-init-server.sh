@@ -16,6 +16,25 @@ fi
 sudo sed -i "s/ALL=(ALL:ALL) ALL/ALL=(ALL:ALL) NOPASSWD:ALL/g" /etc/sudoers
 
 
+#Activation du serveur SSH
+sudo service ssh status | grep -i "sshd is running" > /dev/null
+if [ $? -ne 0 ]
+then
+   #Démarrage du serveur ssh
+   sudo service ssh start
+   #Attente avant de vérifier si Docker est bien running
+   sleep 3
+   
+   #On contrôle que ssh est bien démarré
+   sudo service ssh status | grep -i "sshd is running" > /dev/null
+   if [ $? -ne 0 ]
+   then
+      echo "Le serveur SSH n'arrive pas à démarrer"
+      exit 1
+   fi
+fi
+
+
 #Téléchargement et installation des packages 
 sudo apt-get update
 sudo apt-get -yq install ca-certificates curl gnupg lsb-release git conntrack maven default-jdk net-tools

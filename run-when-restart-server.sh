@@ -3,6 +3,26 @@
 KUBE_VERSION="v1.23.2"
 
 
+#On vérifie si SSH est en cours d'exécution. Sinon, on le démarre
+sudo service ssh status | grep -i "sshd is running" > /dev/null
+if [ $? -ne 0 ]
+then
+   #Démarrage du serveur ssh
+   sudo service ssh start
+   #Attente avant de vérifier si Docker est bien running
+   sleep 3
+   
+   #On contrôle que ssh est bien démarré
+   sudo service ssh status | grep -i "sshd is running" > /dev/null
+   if [ $? -ne 0 ]
+   then
+      echo "Le serveur SSH n'arrive pas à démarrer"
+      exit 1
+   fi
+fi
+
+
+
 #On vérifie si Docker est en cours d'exécution. Sinon, on le démarre
 sudo service docker status | grep -i "Docker is running" > /dev/null
 if [ $? -ne 0 ]
