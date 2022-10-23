@@ -21,6 +21,7 @@ sudo service ssh status | grep -i "sshd is running" > /dev/null
 if [ $? -ne 0 ]
 then
    #Démarrage du serveur ssh
+   sudo ssh-keygen -A
    sudo service ssh start
    #Attente avant de vérifier si Docker est bien running
    sleep 3
